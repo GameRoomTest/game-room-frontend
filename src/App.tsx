@@ -5,11 +5,16 @@ import {
 } from "react-router-dom";
 
 import MainPage from "./core/main-page";
+import TatetiPage from "./core/tateti/page";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <MainPage />,
+  },
+  {
+    path: "/play/tateti",
+    element: <TatetiPage />,
   }
 ]);
 
