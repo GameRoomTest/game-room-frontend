@@ -5,7 +5,7 @@ const MainPage: FunctionComponent<Props> = ({className}) => {
   return (
     <div className={className}>
       <header className="title-container">
-        <h1>Game room</h1>
+        <h2>Game room</h2>
       </header>
 
       <GameList />
