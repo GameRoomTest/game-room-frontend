@@ -7,7 +7,7 @@ export default styled(MainPage)`
     margin: auto;
 
     h1 {
-      color: green;
+      color: red;
     }
   }
 `;
