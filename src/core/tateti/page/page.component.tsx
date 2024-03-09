@@ -51,7 +51,7 @@ const TatetiPage: FunctionComponent<Props> =({className}) => {
     }
     return (
     <div className={className}>
-        <h1 className="title">Tateti</h1>
+        <h1 className="title">Tateti page</h1>
         {!players &&
         <button className="buttonPlay" onClick={() => setShowModal(true)} >Play</button>
         }
