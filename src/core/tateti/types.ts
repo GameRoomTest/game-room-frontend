@@ -6,7 +6,7 @@ export interface Player {
 
 export type PlayerByMark = Record<Mark, Player>
 
-export enum Mark{
+export enum Mark {
     X='X',
     O='O',
 }
