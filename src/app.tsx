@@ -5,7 +5,7 @@ import {
 } from "react-router-dom";
 
 import MainPage from "src/core/main-page";
-import TatetiPage from "src/core/tateti/page";
+import TatetiPage from "src/core/tateti/page/online";
 
 const router = createBrowserRouter([
   {
