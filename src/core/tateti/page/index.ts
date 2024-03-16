@@ -32,7 +32,7 @@ background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,47,121,0.4992121848
     }
     .buttonPlay{
         border: 2px solid rgb(216, 2, 134);
-        border-radius: 0px;
+        border-radius: 10px;
         padding: 18px 36px;
         display: inline-block;
         font-family: "Lucida Console", Monaco, monospace;
@@ -40,6 +40,7 @@ background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,47,121,0.4992121848
         letter-spacing: 1px;
         cursor: pointer;
 }
+
 .score b{
     font-size: 50px;
 }

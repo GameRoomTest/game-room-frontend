@@ -1,6 +1,6 @@
 import { FunctionComponent, useEffect, useState } from "react";
 import BoardItem from "../board-item";
-import { Mark } from "../types";
+import { Mark, PlayerByMark } from "../types";
 
 const winnerPatter = [
     [0,1,2],
@@ -13,20 +13,27 @@ const winnerPatter = [
     [6,4,2],
 ]
 
-const Board: FunctionComponent<Props> =({className, onWin, onReset, mark, onMark}) => {
-const [markList,setMarkList] = useState<(Mark | undefined)[]>(Array(9).fill(undefined))
+const Board: FunctionComponent<Props> =({className, onWin, onReset, mark, onMark, playersByMark, movements}) => {
+// const [markList,setMarkList] = useState<(Mark | undefined)[]>(Array(9).fill(undefined))
 const [isThereWinner, setIsThereWinner] = useState(false);
 
+// const onClickBoardItem = (index: number) => {
+//     if(markList[index] ) return;
+//     const newMarkList = [...markList]
+//     newMarkList[index] = mark
+//     setMarkList(newMarkList)
+
+//     const player = playersByMark[mark];
+//     onMark(index, player.id)
+// }
 const onClickBoardItem = (index: number) => {
-    if(markList[index] ) return;
-    const newMarkList = [...markList]
-    newMarkList[index] = mark
-    setMarkList(newMarkList)
-    onMark()
-    // onTurn(turn === Mark.O ? Mark.X : Mark.O)    
+    if(movements[index]) return;
+    
+    const player = playersByMark[mark];
+    onMark(mark, index, player.id)
 }
+
 const reset = () => {
-    setMarkList(Array(9).fill(undefined))
     setIsThereWinner(false)
     onReset()
 }
@@ -36,7 +43,7 @@ const checkWinner = ()=> {
     winnerPatter.forEach((winningSequence) => {
         [Mark.O, Mark.X].forEach((currentMark) => {
             
-            const isWinner = winningSequence.every(index => markList[index] === currentMark)
+            const isWinner = winningSequence.every(index => movements[index] === currentMark)
             
             if(isWinner){
                 onWin(currentMark)
@@ -54,12 +61,12 @@ const checkWinner = ()=> {
 
 useEffect(()=>{
     checkWinner()
-},[markList])
+},[movements])
 
  return (
     <div className={className}>
     <div className="square">
-        {markList.map((mark, index) => (<BoardItem key={index} mark={mark} onClick={() => !isThereWinner && onClickBoardItem(index)}/>))}
+        {movements.map((mark, index) => (<BoardItem key={index} mark={mark} onClick={() => !isThereWinner && onClickBoardItem(index)}/>))}
         <br />
         <br />
     </div>
@@ -75,7 +82,9 @@ interface Props {
     className?: string;
     onWin: (markWnerin: Mark) => void;
     onReset: () => void;
-    mark: Mark; 
-    onMark: () => void;
+    mark: Mark;
+    playersByMark: PlayerByMark;
+    onMark: (mark:Mark, position: number, playerId: string) => void;
+    movements: (Mark | undefined)[];
 }
 
