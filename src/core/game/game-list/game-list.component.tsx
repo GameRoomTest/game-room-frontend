@@ -1,8 +1,9 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent } from "react";
 
-const GameList: FunctionComponent<Props> = ({ className }) => {
+const GameList: FunctionComponent<Props> = ({className}) => {
   return (
     <div className={className}>
+      
       <div className="game-item">
         <div className="title">Tateti</div>
         <button>Jugar</button>
@@ -23,8 +24,8 @@ const GameList: FunctionComponent<Props> = ({ className }) => {
         <button>Jugar</button>
       </div>
     </div>
-  );
-};
+  )
+}
 
 export default GameList;
 
