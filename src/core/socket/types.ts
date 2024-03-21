@@ -1,14 +1,14 @@
-import {Mark} from 'src/core/tateti/types';
+import { Mark } from 'src/core/tateti/types';
 
 export enum Event {
-  CREATE_GAME = "createGame",
-  GAME_CREATED = "gameCreated",
-  JOIN_GAME = "joinGame",
-  JOINED_IN_GAME = "joinedInGame",
-  ERROR_JOINING = "errorJoining",
-  MOVE = "move",
+  CREATE_GAME = 'createGame',
+  GAME_CREATED = 'gameCreated',
+  JOIN_GAME = 'joinGame',
+  JOINED_IN_GAME = 'joinedInGame',
+  ERROR_JOINING = 'errorJoining',
+  MOVE = 'move',
   ON_MOVE = 'onMove',
-  WINNER = "winner",
+  WINNER = 'winner',
 }
 
 export interface Player {
@@ -21,7 +21,7 @@ export interface Player {
 
 export type Code = string;
 
-export type PlayerById = Record<Player["id"], Player>;
+export type PlayerById = Record<Player['id'], Player>;
 
 export interface Room {
   code: Code;

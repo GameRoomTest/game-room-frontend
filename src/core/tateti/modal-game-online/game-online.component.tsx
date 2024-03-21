@@ -1,20 +1,20 @@
-import { FunctionComponent, useState } from "react";
-import Modal from "src/components/modal";
-import { getSocket } from "src/core/socket";
-import { Event, Room, Player as SocketPlayer } from "src/core/socket/types";
-import { v4 as uuid } from "uuid";
-import { Player } from "../types";
-import {Mark} from 'src/core/tateti/types';
+import { FunctionComponent, useState } from 'react';
+import Modal from 'src/components/modal';
+import { getSocket } from 'src/core/socket';
+import { Event, Room, Player as SocketPlayer } from 'src/core/socket/types';
+import { v4 as uuid } from 'uuid';
+import { Player } from '../types';
+import { Mark } from 'src/core/tateti/types';
 
 const GameOnline: FunctionComponent<Props> = ({
   className,
   open,
   onSubmit,
 }) => {
-  const [playerOneName, setPlayerOneName] = useState("");
-  const [playerTwoName, setPlayerTwoName] = useState("");
+  const [playerOneName, setPlayerOneName] = useState('');
+  const [playerTwoName, setPlayerTwoName] = useState('');
   const [step, setStep] = useState<Step>(Step.Intial);
-  const [code, setCode] = useState("");
+  const [code, setCode] = useState('');
 
   const onConfirmPlayerOneName = () => {
     getSocket().on(Event.GAME_CREATED, (roomCode: string) => {
@@ -29,8 +29,12 @@ const GameOnline: FunctionComponent<Props> = ({
     setStep(Step.ShareCode);
 
     getSocket().on(Event.JOINED_IN_GAME, (room: Room) => {
-      const playerTwo = Object.values(room.players).find((p) => p.id !== playerOneId ) as SocketPlayer;
-      const playerOne = Object.values(room.players).find((p) => p.id === playerOneId ) as SocketPlayer;
+      const playerTwo = Object.values(room.players).find(
+        (p) => p.id !== playerOneId,
+      ) as SocketPlayer;
+      const playerOne = Object.values(room.players).find(
+        (p) => p.id === playerOneId,
+      ) as SocketPlayer;
       onSubmit(
         {
           id: playerOne.id,
@@ -44,7 +48,7 @@ const GameOnline: FunctionComponent<Props> = ({
           name: playerTwo.name,
           score: 0,
         },
-        playerOne.mark
+        playerOne.mark,
       );
       console.log(room);
     });
@@ -59,8 +63,12 @@ const GameOnline: FunctionComponent<Props> = ({
     });
     console.log(code);
     getSocket().on(Event.JOINED_IN_GAME, (room: Room) => {
-      const playerOne = Object.values(room.players).find((p) => p.id !== playerTwoId) as SocketPlayer;
-      const playerTwo = Object.values(room.players).find((p) => p.id === playerTwoId) as SocketPlayer;
+      const playerOne = Object.values(room.players).find(
+        (p) => p.id !== playerTwoId,
+      ) as SocketPlayer;
+      const playerTwo = Object.values(room.players).find(
+        (p) => p.id === playerTwoId,
+      ) as SocketPlayer;
       onSubmit(
         {
           id: playerOne.id,
@@ -74,7 +82,7 @@ const GameOnline: FunctionComponent<Props> = ({
           name: playerTwo.name,
           score: 0,
         },
-        playerTwo.mark
+        playerTwo.mark,
       );
       console.log(room);
     });
@@ -123,7 +131,7 @@ const GameOnline: FunctionComponent<Props> = ({
           />
           <br />
           <button type="submit" onClick={onConfirmPlayerTwoName}>
-            {" "}
+            {' '}
             Join
           </button>
         </div>
