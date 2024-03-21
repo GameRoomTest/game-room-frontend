@@ -1,6 +1,4 @@
-import styled from "styled-components";
-import GameOnline from "./game-online.component";
+import styled from 'styled-components';
+import GameOnline from './game-online.component';
 
-export default styled(GameOnline)`
-
-`
+export default styled(GameOnline)``;

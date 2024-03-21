@@ -1,12 +1,12 @@
-import { FunctionComponent, useEffect, useState } from "react";
-import Board from "../board";
-import AlertWinner from "../alert-winner";
-import TurnName from "../turn-name";
-import { Mark, Player, PlayerByMark } from "../types";
-import InputNameModal from "src/core/tateti/modal-input-name";
-import Page from "./online";
-import { getSocket } from "src/core/socket";
-import { Event } from "src/core/socket/types";
+import { FunctionComponent, useEffect, useState } from 'react';
+import Board from '../board';
+import AlertWinner from '../alert-winner';
+import TurnName from '../turn-name';
+import { Mark, Player, PlayerByMark } from '../types';
+import InputNameModal from 'src/core/tateti/modal-input-name';
+import Page from './online';
+import { getSocket } from 'src/core/socket';
+import { Event } from 'src/core/socket/types';
 
 const TatetiPage: FunctionComponent<Props> = ({ className }) => {
   const [winner, setWinner] = useState<Mark | undefined>(undefined);
@@ -16,39 +16,37 @@ const TatetiPage: FunctionComponent<Props> = ({ className }) => {
   const [showModal, setShowModal] = useState(false);
 
   const [movements, setMovements] = useState<(Mark | undefined)[]>(
-    Array(9).fill(undefined)
+    Array(9).fill(undefined),
   );
 
   const onMark = (mark: Mark, position: number, playerId: string) => {
     const isMyTurn = currentTurn === myMark;
-    if(!isMyTurn) return;
+    if (!isMyTurn) return;
 
     setCurrentTurn(currentTurn === Mark.X ? Mark.O : Mark.X);
 
     const newMovements = [...movements];
     newMovements[position] = mark;
     setMovements(newMovements);
-    
-    getSocket().emit(Event.MOVE, {playerId, position})
 
+    getSocket().emit(Event.MOVE, { playerId, position });
   };
 
- useEffect(() => {
-   getSocket().on(Event.ON_MOVE,({position}) => {
-    console.log(Event.ON_MOVE)
-    setCurrentTurn(currentTurn === Mark.O ? Mark.X : Mark.O);
-    setMovements((prevMovement) => {
-      const newMovements = [...prevMovement]
-      console.log(myMark)
-      newMovements[position] = myMark === Mark.O ? Mark.X : Mark.O;
-      return newMovements  
-      }) 
-   });
-   return () => {
-    getSocket().off(Event.ON_MOVE);
-   }
- }, [currentTurn, myMark]);
- 
+  useEffect(() => {
+    getSocket().on(Event.ON_MOVE, ({ position }) => {
+      console.log(Event.ON_MOVE);
+      setCurrentTurn(currentTurn === Mark.O ? Mark.X : Mark.O);
+      setMovements((prevMovement) => {
+        const newMovements = [...prevMovement];
+        console.log(myMark);
+        newMovements[position] = myMark === Mark.O ? Mark.X : Mark.O;
+        return newMovements;
+      });
+    });
+    return () => {
+      getSocket().off(Event.ON_MOVE);
+    };
+  }, [currentTurn, myMark]);
 
   const onWin = (winnerMark: Mark) => {
     setWinner(winnerMark);
@@ -86,9 +84,7 @@ const TatetiPage: FunctionComponent<Props> = ({ className }) => {
           Play
         </button>
       )}
-      {!players && (
-        <Page onValue={initGame} />
-      )}
+      {!players && <Page onValue={initGame} />}
       {!winner && players && <TurnName mark={currentTurn} players={players} />}
       <section className="board-conteiner">
         {players && (
@@ -96,10 +92,10 @@ const TatetiPage: FunctionComponent<Props> = ({ className }) => {
             mark={currentTurn}
             playersByMark={players}
             onMark={onMark}
-            onReset={() =>{
-              setWinner(undefined)
-              setMovements(Array(9).fill(undefined))}
-            }
+            onReset={() => {
+              setWinner(undefined);
+              setMovements(Array(9).fill(undefined));
+            }}
             onWin={onWin}
             movements={movements}
           />
@@ -110,9 +106,9 @@ const TatetiPage: FunctionComponent<Props> = ({ className }) => {
       )}
       {players && (
         <p className="score">
-          <b> Scores: </b> <span> {players[Mark.X].name} : </span>{" "}
+          <b> Scores: </b> <span> {players[Mark.X].name} : </span>{' '}
           <strong> {players[Mark.X].score}</strong> <b>pts. </b>
-          <b> Scores: </b> <span> {players[Mark.O].name} : </span>{" "}
+          <b> Scores: </b> <span> {players[Mark.O].name} : </span>{' '}
           <strong> {players[Mark.O].score} </strong> <b>pts. </b>
         </p>
       )}
