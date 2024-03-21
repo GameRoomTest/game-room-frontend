@@ -1,7 +1,7 @@
-import { FunctionComponent } from "react";
-import GameList from "../game/game-list";
+import { FunctionComponent } from 'react';
+import GameList from '../game/game-list';
 
-const MainPage: FunctionComponent<Props> = ({className}) => {
+const MainPage: FunctionComponent<Props> = ({ className }) => {
   return (
     <div className={className}>
       <header className="title-container">
@@ -10,8 +10,8 @@ const MainPage: FunctionComponent<Props> = ({className}) => {
 
       <GameList />
     </div>
-  )
-}
+  );
+};
 
 export default MainPage;
 

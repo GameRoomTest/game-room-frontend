@@ -3,15 +3,15 @@ import BoardItem from "../board-item";
 import { Mark, PlayerByMark } from "../types";
 
 const winnerPatter = [
-    [0,1,2],
-    [3,4,5],
-    [6,7,8],
-    [0,3,6],
-    [1,4,7],
-    [2,5,8],
-    [0,4,8],
-    [6,4,2],
-]
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+  [0, 4, 8],
+  [6, 4, 2],
+];
 
 const Board: FunctionComponent<Props> =({className, onWin, onReset, mark, onMark, playersByMark, movements}) => {
 // const [markList,setMarkList] = useState<(Mark | undefined)[]>(Array(9).fill(undefined))
@@ -38,8 +38,7 @@ const reset = () => {
     onReset()
 }
 
-
-const checkWinner = ()=> {
+  const checkWinner = () => {
     winnerPatter.forEach((winningSequence) => {
         [Mark.O, Mark.X].forEach((currentMark) => {
             
@@ -51,13 +50,12 @@ const checkWinner = ()=> {
                              
             }
         })
-
-    })
+      });
+    };
 
     // const win = winnerPatter.every(() => markList.includes)
     // console.log(win,'Hay un ganador')
-}
-
+  
 
 useEffect(()=>{
     checkWinner()
@@ -69,12 +67,15 @@ useEffect(()=>{
         {movements.map((mark, index) => (<BoardItem key={index} mark={mark} onClick={() => !isThereWinner && onClickBoardItem(index)}/>))}
         <br />
         <br />
-    </div>
+      </div>
 
-        <button className="buttonReset" onClick={reset}> reset</button>
+      <button className="buttonReset" onClick={reset}>
+        {' '}
+        reset
+      </button>
     </div>
- )
-}
+  );
+};
 
 export default Board;
 
@@ -87,4 +88,3 @@ interface Props {
     onMark: (mark:Mark, position: number, playerId: string) => void;
     movements: (Mark | undefined)[];
 }
-

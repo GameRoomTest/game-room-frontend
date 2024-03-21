@@ -5,9 +5,9 @@ export interface Player {
     id: string;
 }
 
-export type PlayerByMark = Record<Mark, Player>
+export type PlayerByMark = Record<Mark, Player>;
 
 export enum Mark {
-    X='X',
-    O='O',
+  X = 'X',
+  O = 'O',
 }
