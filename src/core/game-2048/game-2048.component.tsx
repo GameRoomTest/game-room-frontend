@@ -1,12 +1,11 @@
 import { FunctionComponent } from 'react';
+import Menu from 'src/core/game-2048/menu';
 
 const Game2048: FunctionComponent<StyledComponentProps> = ({ className }) => {
   return (
     <div className={className}>
       <div className="body-container">
-        <header className="header">
-          <div className="title-tile">2048</div>
-        </header>
+        <Menu />
       </div>
     </div>
   );

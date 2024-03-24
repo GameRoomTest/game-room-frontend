@@ -6,6 +6,8 @@ export default styled(Game2048)`
     font-family: Rajdhani;
   }
 
+  --border-radius-size: 0.25rem;
+
   background-color: #fbf5e9;
   min-height: 100dvh;
 
