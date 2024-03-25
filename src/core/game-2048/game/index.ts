@@ -8,22 +8,27 @@ export default styled(Game)`
 
   .header {
     display: flex;
+    justify-content: space-between;
   }
 
-  .title-tile {
+  .game-title-tile {
+    background-color: #e6c864;
     color: #fff;
     font-weight: 700;
-    background-color: #e6c864;
     aspect-ratio: 1/1;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 2rem;
-    width: 25%;
+    height: 100px;
     border-radius: 0.25rem;
   }
 
   .game-body {
     flex-grow: 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 `;
