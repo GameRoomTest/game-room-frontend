@@ -21,21 +21,4 @@ export default styled(Game2048)`
     flex-direction: column;
     height: 100dvh;
   }
-
-  .header {
-    display: flex;
-  }
-
-  .title-tile {
-    color: #fff;
-    font-weight: 700;
-    background-color: #e6c864;
-    aspect-ratio: 1/1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    width: 25%;
-    border-radius: 0.25rem;
-  }
 `;

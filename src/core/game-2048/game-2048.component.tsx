@@ -1,11 +1,20 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useState } from 'react';
+
 import Menu from 'src/core/game-2048/menu';
+import Game from 'src/core/game-2048/game';
+import { Page } from './types';
 
 const Game2048: FunctionComponent<StyledComponentProps> = ({ className }) => {
+  const [page, setPage] = useState(Page.Menu);
+
   return (
     <div className={className}>
       <div className="body-container">
-        <Menu />
+        {page === Page.Menu && (
+          <Menu onClickNewGame={() => setPage(Page.Game)} />
+        )}
+
+        {page === Page.Game && <Game onClickMenu={() => setPage(Page.Menu)} />}
       </div>
     </div>
   );
