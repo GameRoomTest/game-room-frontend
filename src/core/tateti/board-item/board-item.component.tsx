@@ -1,22 +1,18 @@
-import { FunctionComponent } from "react";
-import { Mark } from "../types";
+import { FunctionComponent } from 'react';
+import { Mark } from '../types';
 
+const BoardItem: FunctionComponent<Props> = ({ className, mark, onClick }) => {
+  return (
+    <div className={className} onClick={onClick}>
+      {mark}
+    </div>
+  );
+};
 
-const BoardItem: FunctionComponent<Props> = ({className, mark, onClick})=> {
+export default BoardItem;
 
-    return (
-        <div className={className} onClick={onClick}> 
-        {mark}
-        </div>
-    )
+interface Props {
+  className?: string;
+  mark?: Mark;
+  onClick: () => void;
 }
-
-export default BoardItem
-
-
-interface Props{
-    className?: string;
-    mark?: Mark;
-    onClick: () => void
-} 
-

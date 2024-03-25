@@ -1,9 +1,9 @@
-import styled from "styled-components";
-import GameList from "./game-list.component";
+import styled from 'styled-components';
+import GameList from './game-list.component';
 
 export default styled(GameList)`
   display: grid;
-  grid-template-columns: repeat(3,1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   padding-top: 2rem;
   width: calc(100% - 3rem);
