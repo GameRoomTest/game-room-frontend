@@ -22,6 +22,11 @@ const GameList: FunctionComponent<Props> = ({ className }) => {
         <div className="title">Truco</div>
         <button>Jugar</button>
       </div>
+
+      <div className="game-item">
+        <div className="title">Simon Game</div>
+        <button>Jugar</button>
+      </div>
     </div>
   );
 };
