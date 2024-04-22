@@ -1,58 +1,81 @@
-import { FunctionComponent, useState } from 'react';
-import { BoardMatrix } from './types';
+import { FunctionComponent, useEffect, useRef, useState } from 'react';
+import { Axis, Direction, Board as IBoard } from './types';
+import { getExponent } from 'src/utils/get-exponent';
+import { getInitialBoard, getNextBoard, insertOne } from './utils';
 
 const Board: FunctionComponent<StyledComponentProps> = ({ className }) => {
-  const [boardMatrix, setBoardMatrix] = useState<BoardMatrix>(() =>
-    getInitialBoardMatrix(),
-  );
+  const tileRef = useRef<HTMLDivElement>(null);
+  const [board, setBoard] = useState<IBoard>(() => getInitialBoard());
+
+  useEffect(() => {
+    function keyDownHandler(e: KeyboardEvent) {
+      if (e.key === 'ArrowUp') {
+        setBoard((prev) => getNextBoard(prev, Axis.Y, Direction.NEGATIVE));
+      }
+      if (e.key === 'ArrowDown') {
+        setBoard((prev) => getNextBoard(prev, Axis.Y, Direction.POSITIVE));
+      }
+      if (e.key === 'ArrowLeft') {
+        setBoard((prev) => getNextBoard(prev, Axis.X, Direction.NEGATIVE));
+      }
+      if (e.key === 'ArrowRight') {
+        setBoard((prev) => getNextBoard(prev, Axis.X, Direction.POSITIVE));
+      }
+
+      // setBoard((prev) => insertOne(prev));
+    }
+
+    addEventListener('keydown', keyDownHandler);
+
+    return () => {
+      removeEventListener('keydown', keyDownHandler);
+    };
+  }, []);
+
+  useEffect(() => {
+    const widthSize = tileRef.current?.clientWidth;
+    const heightSize = tileRef.current?.clientHeight;
+
+    if (!widthSize || !heightSize) return;
+
+    const element = document.getElementById('tiles-container');
+    element?.style.setProperty('--tile-width', `${widthSize}px`);
+    element?.style.setProperty('--tile-height', `${heightSize}px`);
+  }, []);
 
   return (
     <div className={className}>
-      {boardMatrix.map((row) =>
-        row.map((x) => (
-          <div className={`tile tile-exp-${getExponent(x)}`}>{x}</div>
-        )),
-      )}
+      <div className="tiles-back">
+        <div className="tile-back" ref={tileRef}></div>
+        <div className="tile-back"></div>
+        <div className="tile-back"></div>
+        <div className="tile-back"></div>
+        <div className="tile-back"></div>
+        <div className="tile-back"></div>
+        <div className="tile-back"></div>
+        <div className="tile-back"></div>
+        <div className="tile-back"></div>
+        <div className="tile-back"></div>
+        <div className="tile-back"></div>
+        <div className="tile-back"></div>
+        <div className="tile-back"></div>
+        <div className="tile-back"></div>
+        <div className="tile-back"></div>
+        <div className="tile-back"></div>
+      </div>
+      <div className="tiles-container" id="tiles-container">
+        {board.map(({ id, value, position }) => (
+          <div
+            key={id}
+            // eslint-disable-next-line max-len
+            className={`tile tile-position-${position[Axis.X]}-${position[Axis.Y]} tile-exp-${getExponent(value)}`}
+          >
+            {value}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
 
 export default Board;
-
-function getExponent(total?: number) {
-  if (!total) return undefined;
-
-  return Math.log(total) / Math.log(2) - 1;
-}
-
-function getInitialBoardMatrix(): BoardMatrix {
-  const initialBoardMatrix: BoardMatrix = [
-    [undefined, undefined, undefined, undefined],
-    [undefined, undefined, undefined, undefined],
-    [undefined, undefined, undefined, undefined],
-    [undefined, undefined, undefined, undefined],
-  ];
-
-  const firstRandomRow = getRandomNumber(3);
-  const firstRandomColumn = getRandomNumber(3);
-
-  let secondRandomRow = getRandomNumber(3);
-  let secondRandomColumn = getRandomNumber(3);
-
-  while (
-    firstRandomRow === secondRandomRow &&
-    firstRandomColumn === secondRandomColumn
-  ) {
-    secondRandomRow = getRandomNumber(3);
-    secondRandomColumn = getRandomNumber(3);
-  }
-
-  initialBoardMatrix[firstRandomRow][firstRandomColumn] = 2;
-  initialBoardMatrix[secondRandomRow][secondRandomColumn] = 2;
-
-  return initialBoardMatrix;
-}
-
-function getRandomNumber(max: number): number {
-  return Math.floor(Math.random() * max);
-}

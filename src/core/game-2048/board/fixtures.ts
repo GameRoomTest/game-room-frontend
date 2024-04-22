@@ -1,5 +1,3 @@
-import { BoardMatrix } from './types';
-
 export const colors = [
   '#f0e9de',
   '#efe3cf',
@@ -12,11 +10,4 @@ export const colors = [
   '#f1cd52',
   '#e7c257',
   '#e8be4e',
-];
-
-export const initialBoardMatrix: BoardMatrix = [
-  [undefined, undefined, undefined, undefined],
-  [undefined, undefined, undefined, undefined],
-  [undefined, undefined, undefined, undefined],
-  [undefined, undefined, undefined, undefined],
 ];
