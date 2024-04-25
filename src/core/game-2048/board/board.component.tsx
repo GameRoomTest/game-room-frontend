@@ -1,4 +1,4 @@
-import { FunctionComponent, useCallback, useState } from 'react';
+import { FunctionComponent, useCallback, useRef, useState } from 'react';
 import { Axis, Direction, Board as IBoard } from './types';
 import { getExponent } from 'src/utils/get-exponent';
 import { getInitialBoard, getNextBoard, insertOne } from './utils';
@@ -7,12 +7,19 @@ import { useSetTileSize } from './use-set-tile-size';
 import { columnLength, rowLength } from './fixtures';
 
 const Board: FunctionComponent<StyledComponentProps> = ({ className }) => {
+  const motionEnabled = useRef(true);
   const [board, setBoard] = useState<IBoard>(() => getInitialBoard());
 
   const move = useCallback((axis: Axis, direction: Direction) => {
+    if (!motionEnabled.current) return;
+
+    motionEnabled.current = false;
     setBoard((prev) => getNextBoard(prev, axis, direction));
 
-    setBoard((prev) => insertOne(prev));
+    setTimeout(() => {
+      setBoard((prev) => insertOne(prev));
+      motionEnabled.current = true;
+    }, 200);
   }, []);
 
   useKeyDownHandler(move);
