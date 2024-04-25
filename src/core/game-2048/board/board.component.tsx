@@ -1,68 +1,34 @@
-import { FunctionComponent, useEffect, useRef, useState } from 'react';
+import { FunctionComponent, useCallback, useState } from 'react';
 import { Axis, Direction, Board as IBoard } from './types';
 import { getExponent } from 'src/utils/get-exponent';
 import { getInitialBoard, getNextBoard, insertOne } from './utils';
+import { useKeyDownHandler } from './use-key-down-handler';
+import { useSetTileSize } from './use-set-tile-size';
+import { columnLength, rowLength } from './fixtures';
 
 const Board: FunctionComponent<StyledComponentProps> = ({ className }) => {
-  const tileRef = useRef<HTMLDivElement>(null);
   const [board, setBoard] = useState<IBoard>(() => getInitialBoard());
 
-  useEffect(() => {
-    function keyDownHandler(e: KeyboardEvent) {
-      if (e.key === 'ArrowUp') {
-        setBoard((prev) => getNextBoard(prev, Axis.Y, Direction.NEGATIVE));
-      }
-      if (e.key === 'ArrowDown') {
-        setBoard((prev) => getNextBoard(prev, Axis.Y, Direction.POSITIVE));
-      }
-      if (e.key === 'ArrowLeft') {
-        setBoard((prev) => getNextBoard(prev, Axis.X, Direction.NEGATIVE));
-      }
-      if (e.key === 'ArrowRight') {
-        setBoard((prev) => getNextBoard(prev, Axis.X, Direction.POSITIVE));
-      }
+  const move = useCallback((axis: Axis, direction: Direction) => {
+    setBoard((prev) => getNextBoard(prev, axis, direction));
 
-      // setBoard((prev) => insertOne(prev));
-    }
-
-    addEventListener('keydown', keyDownHandler);
-
-    return () => {
-      removeEventListener('keydown', keyDownHandler);
-    };
+    setBoard((prev) => insertOne(prev));
   }, []);
 
-  useEffect(() => {
-    const widthSize = tileRef.current?.clientWidth;
-    const heightSize = tileRef.current?.clientHeight;
+  useKeyDownHandler(move);
 
-    if (!widthSize || !heightSize) return;
-
-    const element = document.getElementById('tiles-container');
-    element?.style.setProperty('--tile-width', `${widthSize}px`);
-    element?.style.setProperty('--tile-height', `${heightSize}px`);
-  }, []);
+  const tileRef = useSetTileSize();
 
   return (
     <div className={className}>
       <div className="tiles-back">
-        <div className="tile-back" ref={tileRef}></div>
-        <div className="tile-back"></div>
-        <div className="tile-back"></div>
-        <div className="tile-back"></div>
-        <div className="tile-back"></div>
-        <div className="tile-back"></div>
-        <div className="tile-back"></div>
-        <div className="tile-back"></div>
-        <div className="tile-back"></div>
-        <div className="tile-back"></div>
-        <div className="tile-back"></div>
-        <div className="tile-back"></div>
-        <div className="tile-back"></div>
-        <div className="tile-back"></div>
-        <div className="tile-back"></div>
-        <div className="tile-back"></div>
+        {Array(rowLength * columnLength)
+          .fill(undefined)
+          .map((_, i) => (
+            <div className="tile-back" ref={tileRef} key={i} />
+          ))}
       </div>
+
       <div className="tiles-container" id="tiles-container">
         {board.map(({ id, value, position }) => (
           <div

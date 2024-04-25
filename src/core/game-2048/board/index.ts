@@ -1,15 +1,13 @@
 import styled from 'styled-components';
 import Board from './board.component';
-import { colors } from './fixtures';
-
-const columnLength = 4;
-const rowLength = 4;
+import { colors, columnLength, rowLength } from './fixtures';
 
 const getTilePositionStyles = () => {
   let styles = '';
 
   for (let y = 0; y < columnLength; y++) {
     for (let x = 0; x < rowLength; x++) {
+      // gap = 0.5rem
       const gap =
         parseFloat(getComputedStyle(document.documentElement).fontSize) / 2;
 
@@ -51,8 +49,8 @@ export default styled(Board)`
 
   .tiles-back {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(4, 1fr);
+    grid-template-columns: repeat(${rowLength}, 1fr);
+    grid-template-rows: repeat(${columnLength}, 1fr);
     gap: 0.5rem;
     padding: 0.5rem;
     height: 100%;

@@ -1,9 +1,7 @@
-export const getRandomNumber = (max: number, except?: number): number => {
-  let randomNumber = Math.floor(Math.random() * max);
+export function getRandomValue<T>(values: T[], except: T[] = []): T {
+  const _values = values.filter((x) => !except?.includes(x));
 
-  while (randomNumber === except) {
-    randomNumber = Math.floor(Math.random() * max);
-  }
+  const randomIndex = Math.floor(Math.random() * _values.length);
 
-  return randomNumber;
-};
+  return _values[randomIndex];
+}

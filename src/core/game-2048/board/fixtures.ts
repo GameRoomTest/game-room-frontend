@@ -1,3 +1,5 @@
+import { getValuePositions } from './utils';
+
 export const colors = [
   '#f0e9de',
   '#efe3cf',
@@ -11,3 +13,10 @@ export const colors = [
   '#e7c257',
   '#e8be4e',
 ];
+
+export const columnLength = 4;
+export const rowLength = 5;
+export const initialTileValue = 2;
+export const TILE_POSITION_SEPARATOR = '-' as const;
+
+export const tilesPositions: string[] = getValuePositions();

@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 
-import { getRandomNumber } from 'src/utils/get-random-number';
+import { getRandomValue } from 'src/utils/get-random-number';
 import {
   Axis,
   Direction,
@@ -8,33 +8,26 @@ import {
   TempBoardMatrix,
   TempTile,
   TempInMotionTile,
+  Position,
 } from './types';
-
-const columnLength = 4;
-const rowLength = 4;
-const initialTileValue = 2;
+import {
+  TILE_POSITION_SEPARATOR,
+  columnLength,
+  initialTileValue,
+  rowLength,
+  tilesPositions,
+} from './fixtures';
 
 export function insertOne(board: Board): Board {
   const _board = structuredClone(board);
 
-  let x = getRandomNumber(rowLength - 1);
-  let y = getRandomNumber(columnLength - 1);
-
-  while (
-    board.some(({ position }) => position.x === x) &&
-    board.some(({ position }) => position.y === y)
-  ) {
-    x = getRandomNumber(rowLength - 1);
-    y = getRandomNumber(columnLength - 1);
-  }
+  const filledPositions = board.map((tile) => getValuePosition(tile.position));
+  const newTileValuePosition = getRandomValue(tilesPositions, filledPositions);
 
   _board.push({
     id: uuid(),
     value: initialTileValue,
-    position: {
-      x,
-      y,
-    },
+    position: getPositionFromValue(newTileValuePosition),
   });
 
   return _board;
@@ -43,32 +36,20 @@ export function insertOne(board: Board): Board {
 export const getInitialBoard = (): Board => {
   const initialBoard: Board = [];
 
-  const firstTileX = getRandomNumber(rowLength - 1);
-  const firstTileY = getRandomNumber(columnLength - 1);
-
-  const secondTileX = getRandomNumber(rowLength - 1);
-  const secondTileY = getRandomNumber(columnLength - 1, firstTileY);
-
-  // while (firstTileX === secondTileX && firstTileY === secondTileY) {
-  //   secondTileX = getRandomNumber(columnLength - 1);
-  //   secondTileY = getRandomNumber(columnLength - 1);
-  // }
+  const firstTileValuePosition = getRandomValue(tilesPositions);
+  const secondTileValuePosition = getRandomValue(tilesPositions, [
+    firstTileValuePosition,
+  ]);
 
   initialBoard.push({
     id: uuid(),
     value: initialTileValue,
-    position: {
-      [Axis.X]: firstTileX,
-      [Axis.Y]: firstTileY,
-    },
+    position: getPositionFromValue(firstTileValuePosition),
   });
   initialBoard.push({
     id: uuid(),
     value: initialTileValue,
-    position: {
-      [Axis.X]: secondTileX,
-      [Axis.Y]: secondTileY,
-    },
+    position: getPositionFromValue(secondTileValuePosition),
   });
 
   return initialBoard;
@@ -156,13 +137,13 @@ function getColumn(board: TempBoardMatrix, columnIndex: number): TempTile[] {
 }
 
 function getNextTiles(tiles: TempTile[], axis: Axis, direction: Direction) {
-  // mover hacia la direccion los items
+  // move the items towards the direction
   const relocatedTiles = relocate(tiles, axis, direction);
 
-  // fusionar los que son iguales y estan seguidos
+  // merge those that are the same and are consecutive
   const tilesJoinedByPairs = joinPairs(relocatedTiles, direction);
 
-  // mover hacia la direccion los items
+  // move the items towards the direction
   const result = relocate(tilesJoinedByPairs, axis, direction);
 
   return result;
@@ -176,24 +157,24 @@ function joinPairs(tiles: TempTile[], direction: Direction): TempTile[] {
     const tile = _tiles[i];
     const nextIndex = i + 1;
 
-    // si no existe el siguiente indice
+    // if doesn't exist the next index
     if (nextIndex >= _tiles.length) continue;
 
     const nextTile = _tiles[nextIndex];
 
-    // si el actual o el siguiente es undefined
+    // if the current or the next tile don't exist
     if (!tile || !nextTile) continue;
 
-    // si son diferentes
+    // if they are diferent
     if (tile.value !== nextTile.value) continue;
 
-    // colocar la suma en el indice actual
+    // set the total value in the current tile
     _tiles[i] = {
       ...tile,
       id: nextTile.id,
       value: tile.value + nextTile.value,
     };
-    // descartar el siguiente
+    // discard the next tile
     _tiles[nextIndex] = undefined;
   }
 
@@ -222,12 +203,30 @@ function relocate(
     direction === Direction.POSITIVE
       ? [...blanks, ...tilesWithValues]
       : [...tilesWithValues, ...blanks];
-
-  // nextTiles.forEach((tile, i) => {
-  //   if (!tile) return;
-
-  //   nextTiles[i] = tile;
-  // });
-
   return nextTiles;
+}
+
+export function getPositionFromValue(valuePosition: string): Position {
+  const [x, y] = valuePosition.split(TILE_POSITION_SEPARATOR);
+
+  return {
+    [Axis.X]: +x,
+    [Axis.Y]: +y,
+  };
+}
+
+export function getValuePosition(position: Position): string {
+  return `${position[Axis.X]}${TILE_POSITION_SEPARATOR}${position[Axis.Y]}`;
+}
+
+export function getValuePositions(): string[] {
+  const positions: string[] = [];
+
+  for (let x = 0; x < rowLength; x++) {
+    for (let y = 0; y < columnLength; y++) {
+      positions.push(getValuePosition({ x, y }));
+    }
+  }
+
+  return positions;
 }
