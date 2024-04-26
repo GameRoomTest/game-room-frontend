@@ -1,5 +1,3 @@
-import { v4 as uuid } from 'uuid';
-
 import { getRandomValue } from 'src/utils/get-random-number';
 import {
   Axis,
@@ -18,6 +16,8 @@ import {
   tilesPositions,
 } from './fixtures';
 
+let id = 1;
+
 export function insertOne(board: Board): Board {
   const _board = structuredClone(board);
 
@@ -25,12 +25,12 @@ export function insertOne(board: Board): Board {
   const newTileValuePosition = getRandomValue(tilesPositions, filledPositions);
 
   _board.push({
-    id: uuid(),
+    id: id++,
     value: initialTileValue,
     position: getPositionFromValue(newTileValuePosition),
   });
 
-  return _board;
+  return _board.sort((a, b) => (a.id < b.id ? 1 : -1));
 }
 
 export const getInitialBoard = (): Board => {
@@ -42,12 +42,12 @@ export const getInitialBoard = (): Board => {
   ]);
 
   initialBoard.push({
-    id: uuid(),
+    id: id++,
     value: initialTileValue,
     position: getPositionFromValue(firstTileValuePosition),
   });
   initialBoard.push({
-    id: uuid(),
+    id: id++,
     value: initialTileValue,
     position: getPositionFromValue(secondTileValuePosition),
   });
@@ -87,7 +87,7 @@ export function getNextBoard(
     });
   });
 
-  return nextBoard;
+  return nextBoard.sort((a, b) => (a.id < b.id ? 1 : -1));
 }
 
 export function getEmptyBoardMatrix(): TempBoardMatrix {

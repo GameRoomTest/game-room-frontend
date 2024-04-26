@@ -1,6 +1,5 @@
 import { FunctionComponent, useCallback, useRef, useState } from 'react';
 import { Axis, Direction, Board as IBoard } from './types';
-import { getExponent } from 'src/utils/get-exponent';
 import {
   getInitialBoard,
   getNextBoard,
@@ -11,6 +10,7 @@ import { useKeyDownHandler } from './use-key-down-handler';
 import { useSetTileSize } from './use-set-tile-size';
 import { columnLength, rowLength } from './fixtures';
 import { areDiferentArrays } from 'src/utils/compare-arrays';
+import Tile from './tile';
 
 const Board: FunctionComponent<StyledComponentProps> = ({ className }) => {
   const motionEnabled = useRef(true);
@@ -32,13 +32,9 @@ const Board: FunctionComponent<StyledComponentProps> = ({ className }) => {
         nextPositions,
       );
 
-      setBoard(nextBoard);
-
       if (boardHasChanged) {
-        setTimeout(() => {
-          const _nextBoard = insertOne(nextBoard);
-          setBoard(_nextBoard);
-        }, 200);
+        const _nextBoard = insertOne(nextBoard);
+        setBoard(_nextBoard);
       }
 
       motionEnabled.current = true;
@@ -62,13 +58,12 @@ const Board: FunctionComponent<StyledComponentProps> = ({ className }) => {
 
       <div className="tiles-container" id="tiles-container">
         {board.map(({ id, value, position }) => (
-          <div
+          <Tile
             key={id}
-            // eslint-disable-next-line max-len
-            className={`tile tile-position-${position[Axis.X]}-${position[Axis.Y]} tile-exp-${getExponent(value)}`}
-          >
-            {value}
-          </div>
+            value={value}
+            x={position[Axis.X]}
+            y={position[Axis.Y]}
+          />
         ))}
       </div>
     </div>

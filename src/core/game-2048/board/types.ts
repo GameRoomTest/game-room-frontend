@@ -17,7 +17,7 @@ export enum Axis {
 export type Position = Record<Axis, number>;
 
 export interface InMotionTile {
-  id: string;
+  id: number;
   position: Position;
   value: number;
 }
