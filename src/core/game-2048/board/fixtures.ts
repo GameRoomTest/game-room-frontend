@@ -15,7 +15,7 @@ export const colors = [
 ];
 
 export const columnLength = 4;
-export const rowLength = 5;
+export const rowLength = 4;
 export const initialTileValue = 2;
 export const TILE_POSITION_SEPARATOR = '-' as const;
 

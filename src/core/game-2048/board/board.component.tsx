@@ -1,26 +1,50 @@
 import { FunctionComponent, useCallback, useRef, useState } from 'react';
 import { Axis, Direction, Board as IBoard } from './types';
 import { getExponent } from 'src/utils/get-exponent';
-import { getInitialBoard, getNextBoard, insertOne } from './utils';
+import {
+  getInitialBoard,
+  getNextBoard,
+  getValuePosition,
+  insertOne,
+} from './utils';
 import { useKeyDownHandler } from './use-key-down-handler';
 import { useSetTileSize } from './use-set-tile-size';
 import { columnLength, rowLength } from './fixtures';
+import { areDiferentArrays } from 'src/utils/compare-arrays';
 
 const Board: FunctionComponent<StyledComponentProps> = ({ className }) => {
   const motionEnabled = useRef(true);
   const [board, setBoard] = useState<IBoard>(() => getInitialBoard());
 
-  const move = useCallback((axis: Axis, direction: Direction) => {
-    if (!motionEnabled.current) return;
+  const move = useCallback(
+    async (axis: Axis, direction: Direction) => {
+      if (!motionEnabled.current) return;
 
-    motionEnabled.current = false;
-    setBoard((prev) => getNextBoard(prev, axis, direction));
+      motionEnabled.current = false;
 
-    setTimeout(() => {
-      setBoard((prev) => insertOne(prev));
+      const nextBoard = getNextBoard(board, axis, direction);
+
+      const currentPositions = board.map((x) => getValuePosition(x.position));
+      const nextPositions = nextBoard.map((x) => getValuePosition(x.position));
+
+      const boardHasChanged = areDiferentArrays(
+        currentPositions,
+        nextPositions,
+      );
+
+      setBoard(nextBoard);
+
+      if (boardHasChanged) {
+        setTimeout(() => {
+          const _nextBoard = insertOne(nextBoard);
+          setBoard(_nextBoard);
+        }, 200);
+      }
+
       motionEnabled.current = true;
-    }, 200);
-  }, []);
+    },
+    [board],
+  );
 
   useKeyDownHandler(move);
 
