@@ -12,8 +12,11 @@ import { columnLength, rowLength } from './fixtures';
 import { areDiferentArrays } from 'src/utils/compare-arrays';
 import Tile from './tile';
 import { useGame2048Store } from 'src/state/game-2048';
+import { useSwipingGestureHandler } from './use-swiping-gesture-handler';
 
 const Board: FunctionComponent<StyledComponentProps> = ({ className }) => {
+  const boardRef = useRef<HTMLDivElement>(null);
+
   const motionEnabled = useRef(true);
   const [board, setBoard] = useState<IBoard>(() => getInitialBoard());
 
@@ -52,11 +55,12 @@ const Board: FunctionComponent<StyledComponentProps> = ({ className }) => {
   );
 
   useKeyDownHandler(move);
+  useSwipingGestureHandler(move, boardRef);
 
   const tileRef = useSetTileSize();
 
   return (
-    <div className={className}>
+    <div className={className} ref={boardRef}>
       <div className="tiles-back">
         {Array(rowLength * columnLength)
           .fill(undefined)
