@@ -25,12 +25,12 @@ export function insertOne(board: Board): Board {
   const newTileValuePosition = getRandomValue(tilesPositions, filledPositions);
 
   _board.push({
-    id: id++,
+    id: getId(),
     value: initialTileValue,
     position: getPositionFromValue(newTileValuePosition),
   });
 
-  return _board.sort((a, b) => (a.id < b.id ? 1 : -1));
+  return sortAsc(_board);
 }
 
 export const getInitialBoard = (): Board => {
@@ -42,12 +42,12 @@ export const getInitialBoard = (): Board => {
   ]);
 
   initialBoard.push({
-    id: id++,
+    id: getId(),
     value: initialTileValue,
     position: getPositionFromValue(firstTileValuePosition),
   });
   initialBoard.push({
-    id: id++,
+    id: getId(),
     value: initialTileValue,
     position: getPositionFromValue(secondTileValuePosition),
   });
@@ -87,7 +87,7 @@ export function getNextBoard(
     });
   });
 
-  return nextBoard.sort((a, b) => (a.id < b.id ? 1 : -1));
+  return sortAsc(nextBoard);
 }
 
 export function getEmptyBoardMatrix(): TempBoardMatrix {
@@ -229,4 +229,12 @@ export function getValuePositions(): string[] {
   }
 
   return positions;
+}
+
+function sortAsc(array: Board) {
+  return array.sort((a, b) => a.id - b.id);
+}
+
+function getId(): number {
+  return id++;
 }
