@@ -55,11 +55,7 @@ export const getInitialBoard = (): Board => {
   return initialBoard;
 };
 
-export function getNextBoard(
-  board: Board,
-  axis: Axis,
-  direction: Direction,
-): Board {
+export function getNextBoard(board: Board, axis: Axis, direction: Direction) {
   const tempBoardMatrix = getEmptyBoardMatrix();
 
   board.forEach((tile) => {
@@ -69,7 +65,11 @@ export function getNextBoard(
     };
   });
 
-  const nextBoardMatrix = getNextBoardMatrix(tempBoardMatrix, axis, direction);
+  const { nextBoardMatrix, newValues } = getNextBoardMatrix(
+    tempBoardMatrix,
+    axis,
+    direction,
+  );
 
   const nextBoard: Board = [];
 
@@ -87,7 +87,7 @@ export function getNextBoard(
     });
   });
 
-  return sortAsc(nextBoard);
+  return { nextBoard: sortAsc(nextBoard), newValues };
 }
 
 export function getEmptyBoardMatrix(): TempBoardMatrix {
@@ -100,14 +100,19 @@ export function getNextBoardMatrix(
   board: TempBoardMatrix,
   axis: Axis,
   direction: Direction,
-): TempBoardMatrix {
+) {
   const _board = structuredClone(board);
+
+  const _newValues: number[] = [];
 
   if (axis === Axis.X) {
     const columnLength = board.length;
 
     for (let i = 0; i < columnLength; i++) {
-      _board[i] = getNextTiles(board[i], axis, direction);
+      const { nextTiles, newValues } = getNextTiles(board[i], axis, direction);
+      _board[i] = nextTiles;
+
+      _newValues.push(...newValues);
     }
   } else {
     const rowLength = board[0].length;
@@ -115,15 +120,21 @@ export function getNextBoardMatrix(
     for (let i = 0; i < rowLength; i++) {
       const tiles = getColumn(board, i);
 
-      const nextColumn = getNextTiles(tiles, axis, direction);
+      const { nextTiles: nextColumn, newValues } = getNextTiles(
+        tiles,
+        axis,
+        direction,
+      );
 
       nextColumn.forEach((tile, columnIndex) => {
         _board[columnIndex][i] = tile;
       });
+
+      _newValues.push(...newValues);
     }
   }
 
-  return _board;
+  return { nextBoardMatrix: _board, newValues: _newValues };
 }
 
 function getColumn(board: TempBoardMatrix, columnIndex: number): TempTile[] {
@@ -141,17 +152,19 @@ function getNextTiles(tiles: TempTile[], axis: Axis, direction: Direction) {
   const relocatedTiles = relocate(tiles, axis, direction);
 
   // merge those that are the same and are consecutive
-  const tilesJoinedByPairs = joinPairs(relocatedTiles, direction);
+  const { joinedTiles, newValues } = joinPairs(relocatedTiles, direction);
 
   // move the items towards the direction
-  const result = relocate(tilesJoinedByPairs, axis, direction);
+  const nextTiles = relocate(joinedTiles, axis, direction);
 
-  return result;
+  return { nextTiles, newValues };
 }
 
-function joinPairs(tiles: TempTile[], direction: Direction): TempTile[] {
+function joinPairs(tiles: TempTile[], direction: Direction) {
   const _tiles =
     direction === Direction.POSITIVE ? [...tiles].reverse() : [...tiles];
+
+  const newValues: number[] = [];
 
   for (let i = 0; i < _tiles.length; i++) {
     const tile = _tiles[i];
@@ -169,16 +182,24 @@ function joinPairs(tiles: TempTile[], direction: Direction): TempTile[] {
     if (tile.value !== nextTile.value) continue;
 
     // set the total value in the current tile
+    const newValue = tile.value + nextTile.value;
+
     _tiles[i] = {
       ...tile,
       id: nextTile.id,
-      value: tile.value + nextTile.value,
+      value: newValue,
     };
+
     // discard the next tile
     _tiles[nextIndex] = undefined;
+
+    newValues.push(newValue);
   }
 
-  return direction === Direction.POSITIVE ? _tiles.reverse() : _tiles;
+  const joinedTiles =
+    direction === Direction.POSITIVE ? _tiles.reverse() : _tiles;
+
+  return { joinedTiles, newValues };
 }
 
 function relocate(
