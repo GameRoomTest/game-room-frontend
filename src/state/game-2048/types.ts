@@ -5,6 +5,7 @@ export interface Game2048State {
   best: number;
   increaseScore: (score: number) => void;
   setBestScore: (bestScore: number) => void;
+  resetScore: () => void;
 }
 
 export type SetStore = TSetStore<Game2048State>;

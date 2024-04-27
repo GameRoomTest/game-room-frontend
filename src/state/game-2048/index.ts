@@ -13,4 +13,5 @@ export const useGame2048Store = create<Game2048State>()((set, get) => ({
   best: initialBestScore,
   increaseScore: (score: number) => increaseScore(score, set, get),
   setBestScore: (bestScore: number) => setBestScore(bestScore, set),
+  resetScore: () => set({ score: 0 }),
 }));
